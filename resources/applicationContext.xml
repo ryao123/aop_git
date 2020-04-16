@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd">
+        
+        
+  <bean id="userDao" class="Aop.dao.impl.UserDaoImpl"></bean>
+  <bean id="userService" class="Aop.service.impl.UserServiceImpl">
+  	<property name="userDao" ref="userDao"></property>
+  </bean>
+       
+      <!-- 配置日志组件  -->
+       <bean id="theLogger" class="Aop.logger.UserServiceLogger"></bean>
+       
+      <aop:config>
+      	<aop:pointcut expression="execution(public void saveUser(Aop.pojo.User))" id="myPoint"/> 
+      	<aop:aspect ref="theLogger">
+      		<aop:before method="before" pointcut-ref="myPoint"/>
+      		<aop:after-returning  method="after" pointcut-ref="myPoint" returning="result"/>
+      		
+      	</aop:aspect>
+      </aop:config>
+      
+</beans>
+
